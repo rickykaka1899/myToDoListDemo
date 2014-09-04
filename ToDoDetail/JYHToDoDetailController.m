@@ -44,7 +44,7 @@
     cell = [tableView expandableTextCellWithId:@"cellId"];
     
     ((ACEExpandableTextCell *)cell).textView.text = iDetailVC.iDetailVO.iTodoStr;
-    ((ACEExpandableTextCell *)cell).textView.placeholder = @"text";
+    ((ACEExpandableTextCell *)cell).textView.placeholder = @"NEW";
   }
     //switch
   else if(indexPath.section == 1)
@@ -70,15 +70,15 @@
   {
     NSString *dateStr = nil;
       //获得系统时间
-    if (iDetailVC.iDetailVO.iRemindDate != nil  )
-    {
-      dateStr = iDetailVC.iDetailVO.iRemindDate;
-    }
-    else
-    {
-      dateStr = [self systemDate];
-    }
-    
+//    if (iDetailVC.iDetailVO.iRemindDate != nil  )
+//    {
+//      dateStr = iDetailVC.iDetailVO.iRemindDate;
+//    }
+//    else
+//    {
+//      dateStr = [self systemDate];
+//    }
+    dateStr = [self systemDate:iDetailVC.iDetailVO.iRemindDate];
     cell.textLabel.text = dateStr;
     if (iDetailVC.iDetailVO.iSwitch != nil && [iDetailVC.iDetailVO.iSwitch isEqualToString:@"1"])
     {
@@ -109,7 +109,7 @@
   if (indexPath.section == 2)
   {
     iDatepicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 300, 320, 216)];
-    iDatepicker.datePickerMode = UIDatePickerModeDate;
+    iDatepicker.datePickerMode = UIDatePickerModeDateAndTime;
     iDatepicker.backgroundColor = [UIColor greenColor];
     [iDatepicker addTarget:self action:@selector(datePickerAction:) forControlEvents:UIControlEventValueChanged];
     [iDetailVC.view addSubview:iDatepicker];
@@ -180,24 +180,22 @@
 {
   UIDatePicker * control = (UIDatePicker*)sender;
   self.iDate = control.date;
-  iDetailVC.iDetailVO.iRemindDate = [self systemDate];
+  iDetailVC.iDetailVO.iRemindDate = self.iDate;
   [iDetailVC.iTableview reloadData];
 }
 
-- (NSString *)systemDate
+- (NSString *)systemDate:(NSDate *)date
 {
-  if (self.iDate == nil)
+  if (date == nil)
   {
-    self.iDate = [NSDate date];
+    date = [NSDate date];
   }
-  NSCalendar  * cal=[NSCalendar  currentCalendar];
-  NSUInteger  unitFlags=NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit;
-  NSDateComponents * conponent= [cal components:unitFlags fromDate:self.iDate];
-  NSInteger year=[conponent year];
-  NSInteger month=[conponent month];
-  NSInteger day=[conponent day];
-  NSString *nsDateString= [NSString  stringWithFormat:@"%4d年%2d月%2d日",year,month,day];
-  return nsDateString;
+  NSDateFormatter *aFmter = [[NSDateFormatter alloc]init];
+  [aFmter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+  NSString *aStr = [aFmter stringFromDate:date];
+  [aFmter release];
+  return aStr;
+
 }
 
 - (void)dealloc
