@@ -18,8 +18,10 @@
 @interface JYHToDoController()
 {
 //  UITextView *iTextView;
+  UIButton *iCellBtn;
 }
 //@property (nonatomic,retain) UITextView *iTextView;
+@property (nonatomic,retain) UIButton *iCellBtn;
 
 @end
 
@@ -29,6 +31,7 @@
 @synthesize iTextField;
 @synthesize iToDoVC;
 @synthesize iCacheList;
+@synthesize iCellBtn;
 //@synthesize iTextView;
 
 - (void) setDefaultList
@@ -86,6 +89,7 @@
   [iToDoString release];
   [iTextField release];
   [iCacheList release];
+  [iCellBtn release];
   [super dealloc];
 }
 
@@ -122,7 +126,8 @@
     }
     else
     {
-      return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
+//      return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
+      return UITableViewCellEditingStyleNone;
     }
   }
 }
@@ -149,46 +154,53 @@
   
   if (cell == nil)
   {
-//    cell = [[[ACEExpandableTextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellidentifier]autorelease];
     cell = (ACEExpandableTextCell *)[tableView expandableTextCellWithId:@"cellId"];
 
   }
   if (indexPath.row == [iToDoList count])
   {
-//    UITextView *tempView = ((ACEExpandableTextCell *)cell).textView;
-//    for (UIView *childView in [tempView subviews])
-//    {
-//      [childView removeFromSuperview];
-//    }
     ((ACEExpandableTextCell *)cell).textView.text = @"";
     ((ACEExpandableTextCell *)cell).textView.placeholder = @"text";
   }
   else
   {
-    
     UITextView *iTextView= ((ACEExpandableTextCell *)cell).textView;
     iTextView.text = ((JYHToDoThingVO *)[iToDoList objectAtIndex:indexPath.row]).iTodoStr;
     iTextView.frame = CGRectMake(8, 0, 240, 24);
     iTextView.frame = [self expandCellTextViewAttributes:iTextView];
-    UIButton *detailBtn = [[UIButton alloc] initWithFrame:CGRectMake(270, 6, 32, 32)];
+    CGFloat cellhei = MAX(48.0, cellHeight[indexPath.row]);
+    CGFloat y = ( cellhei - 32  )/2.0;
+    UIButton *detailBtn = [[UIButton alloc] initWithFrame:CGRectMake(280, y, 32, 32)];
     detailBtn.tag = indexPath.row;
-    detailBtn.backgroundColor = [UIColor redColor];
+    [detailBtn setImage:[UIImage imageNamed:@"cell_ic_annotation_norm"] forState:UIControlStateNormal];
+    [detailBtn setImage:[UIImage imageNamed:@"cell_ic_annotation_norm"] forState:UIControlStateHighlighted];
     [detailBtn addTarget:self action:@selector(detailAction:) forControlEvents:UIControlEventTouchUpInside];
     [cell addSubview:detailBtn];
     [detailBtn release];
+
+    UIButton *selectBtn = [[UIButton alloc] initWithFrame:CGRectMake(8, y, 32, 32)];
+    selectBtn.tag = indexPath.row;
+    [selectBtn addTarget:self action:@selector(changeSelectStateAction:) forControlEvents:UIControlEventTouchUpInside];
+    [cell addSubview:selectBtn];
     if (!iToDoVC.isEditing)
     {
+      selectBtn.hidden = NO;
       BOOL fini = ((JYHToDoThingVO *)[iToDoList objectAtIndex:indexPath.row]).isFinished;
       if(fini)
       {
-        cell.selected = YES;
+        [selectBtn setImage:[UIImage imageNamed:@"cell_ic_checkbox_checked"] forState:UIControlStateNormal];
       }
       else
       {
-        cell.selected = NO;
+        [selectBtn setImage:[UIImage imageNamed:@"cell_ic_checkbox_unchecked"] forState:UIControlStateNormal];
       }
     }
-    
+    else
+    {
+      selectBtn.hidden = YES;
+      [selectBtn removeFromSuperview];
+    }
+    [selectBtn release];
   }
   return cell;
 }
@@ -198,18 +210,7 @@
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
     //  UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     //  cell.selected = YES;
-  JYHToDoThingVO *thingVO = [iToDoList objectAtIndex:indexPath.row];
-  if (!thingVO.isFinished)
-  {
-    thingVO.isFinished = TRUE;
-  }
-  else
-  {
-    thingVO.isFinished = FALSE;
-  }
-  [iToDoList replaceObjectAtIndex:indexPath.row withObject:thingVO];
-  [self changeStatusOfVO:thingVO withStatus:thingVO.isFinished];
-  [iToDoVC.iTableView reloadData];
+
 }
 
 #pragma mark expandcell delegate
@@ -240,6 +241,7 @@
     //保存到缓存
   [JYHSaveToCache writeToFile:iCacheList];
   [iToDoVC.iTableView reloadData];
+
 }
 
 /*
@@ -476,6 +478,28 @@
   detailVC.iDetailVO = [iToDoList objectAtIndex:btn.tag];
   [self.iToDoVC presentViewController:detailVC animated:YES completion:nil];
   [detailVC release];
+}
+
+- (void)changeSelectStateAction:(id)sender
+{
+  UIButton *btn = ((UIButton *)sender);
+  JYHToDoThingVO *thingVO = [iToDoList objectAtIndex:btn.tag];
+  if (!thingVO.isFinished)
+  {
+    thingVO.isFinished = TRUE;
+    [btn setImage:[UIImage imageNamed:@"cell_ic_checkbox_checked"] forState:UIControlStateNormal];
+    
+  }
+  else
+  {
+    thingVO.isFinished = FALSE;
+    [btn setImage:[UIImage imageNamed:@"cell_ic_checkbox_unchecked"] forState:UIControlStateNormal];
+  }
+  [iToDoList replaceObjectAtIndex:btn.tag withObject:thingVO];
+  [self changeStatusOfVO:thingVO withStatus:thingVO.isFinished];
+  [iToDoVC.iTableView reloadData];
+  [iToDoVC.iTableView beginUpdates];
+  [iToDoVC.iTableView endUpdates];
 }
 
 - (void)initLocationNotification:(JYHToDoThingVO *)vo

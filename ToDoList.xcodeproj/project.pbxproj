@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2249D09119BEC373001D0B4D /* cell_ic_checkbox_checked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2249D08F19BEC373001D0B4D /* cell_ic_checkbox_checked@2x.png */; };
+		2249D09219BEC373001D0B4D /* cell_ic_checkbox_unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 2249D09019BEC373001D0B4D /* cell_ic_checkbox_unchecked.png */; };
+		2249D09519BEC46A001D0B4D /* cell_ic_checkbox_unchecked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2249D09319BEC46A001D0B4D /* cell_ic_checkbox_unchecked@2x.png */; };
+		2249D09819BECBFA001D0B4D /* cell_ic_checkbox_checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 2249D09719BECBFA001D0B4D /* cell_ic_checkbox_checked.png */; };
+		2249D09C19BECC06001D0B4D /* cell_ic_annotation_norm@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2249D09A19BECC06001D0B4D /* cell_ic_annotation_norm@2x.png */; };
+		2249D09E19BECC7D001D0B4D /* cell_ic_annotation_norm.png in Resources */ = {isa = PBXBuildFile; fileRef = 2249D09D19BECC7D001D0B4D /* cell_ic_annotation_norm.png */; };
 		2255CE6C19AEF84900385C19 /* JYHMyPullingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2255CE6B19AEF84900385C19 /* JYHMyPullingTableView.m */; };
 		2255CE6F19AF045C00385C19 /* WAPullingRefreshTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2255CE6E19AF045C00385C19 /* WAPullingRefreshTableView.m */; };
 		2255CE7F19AF1D6B00385C19 /* ACEExpandableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2255CE7B19AF1D6B00385C19 /* ACEExpandableTextCell.m */; };
@@ -55,6 +61,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2249D08F19BEC373001D0B4D /* cell_ic_checkbox_checked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cell_ic_checkbox_checked@2x.png"; sourceTree = "<group>"; };
+		2249D09019BEC373001D0B4D /* cell_ic_checkbox_unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_ic_checkbox_unchecked.png; sourceTree = "<group>"; };
+		2249D09319BEC46A001D0B4D /* cell_ic_checkbox_unchecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cell_ic_checkbox_unchecked@2x.png"; sourceTree = "<group>"; };
+		2249D09719BECBFA001D0B4D /* cell_ic_checkbox_checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_ic_checkbox_checked.png; sourceTree = "<group>"; };
+		2249D09A19BECC06001D0B4D /* cell_ic_annotation_norm@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cell_ic_annotation_norm@2x.png"; sourceTree = "<group>"; };
+		2249D09D19BECC7D001D0B4D /* cell_ic_annotation_norm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_ic_annotation_norm.png; sourceTree = "<group>"; };
 		2255CE6A19AEF84900385C19 /* JYHMyPullingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYHMyPullingTableView.h; sourceTree = "<group>"; };
 		2255CE6B19AEF84900385C19 /* JYHMyPullingTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYHMyPullingTableView.m; sourceTree = "<group>"; };
 		2255CE6D19AF045C00385C19 /* WAPullingRefreshTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAPullingRefreshTableView.h; sourceTree = "<group>"; };
@@ -138,6 +150,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2249D08E19BEC373001D0B4D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2249D09D19BECC7D001D0B4D /* cell_ic_annotation_norm.png */,
+				2249D09A19BECC06001D0B4D /* cell_ic_annotation_norm@2x.png */,
+				2249D09319BEC46A001D0B4D /* cell_ic_checkbox_unchecked@2x.png */,
+				2249D09719BECBFA001D0B4D /* cell_ic_checkbox_checked.png */,
+				2249D08F19BEC373001D0B4D /* cell_ic_checkbox_checked@2x.png */,
+				2249D09019BEC373001D0B4D /* cell_ic_checkbox_unchecked.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		2255CE6819AEF7FC00385C19 /* New Group */ = {
 			isa = PBXGroup;
 			children = (
@@ -244,6 +269,7 @@
 		22D80DBD19A426BE004EDB7D = {
 			isa = PBXGroup;
 			children = (
+				2249D08E19BEC373001D0B4D /* Resources */,
 				2255CE6919AEF81400385C19 /* Controls */,
 				22D80DF819A4270B004EDB7D /* Classes */,
 				22D80DCF19A426BE004EDB7D /* ToDoList */,
@@ -404,11 +430,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				22D80DD419A426BE004EDB7D /* InfoPlist.strings in Resources */,
+				2249D09219BEC373001D0B4D /* cell_ic_checkbox_unchecked.png in Resources */,
 				22AF219A19B4138A00487714 /* JYHSwitchTableViewCell.xib in Resources */,
 				22AF267A19B446C600487714 /* JYHFirstViewController.xib in Resources */,
+				2249D09119BEC373001D0B4D /* cell_ic_checkbox_checked@2x.png in Resources */,
+				2249D09C19BECC06001D0B4D /* cell_ic_annotation_norm@2x.png in Resources */,
+				2249D09E19BECC7D001D0B4D /* cell_ic_annotation_norm.png in Resources */,
 				22D71AAB19AC518900A9DCEC /* JYHToDoDetailViewController.xib in Resources */,
 				227833F219B0193500FCB1FA /* JYHListNormalTableViewCell.xib in Resources */,
 				22AF21A419B413E000487714 /* JYHToDoViewController.xib in Resources */,
+				2249D09519BEC46A001D0B4D /* cell_ic_checkbox_unchecked@2x.png in Resources */,
+				2249D09819BECBFA001D0B4D /* cell_ic_checkbox_checked.png in Resources */,
 				22D80DDC19A426BE004EDB7D /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
