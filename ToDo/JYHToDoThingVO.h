@@ -10,18 +10,18 @@
 
 @interface JYHToDoThingVO : NSObject<NSCoding>
 {
-  NSString *isFinished;
+  BOOL isFinished;
   NSString *iTodoStr;
   NSString *iTimeStamp;
-  NSString *iSwitch;
+  BOOL iSwitch;
   NSDate *iRemindDate;
   NSString *iNote;
 }
 
-@property (nonatomic,retain) NSString *isFinished;
+@property (nonatomic,assign) BOOL isFinished;
 @property (nonatomic,retain) NSString *iTodoStr;
 @property (nonatomic,retain) NSString *iTimeStamp;
-@property (nonatomic,retain) NSString *iSwitch;
+@property (nonatomic,assign) BOOL iSwitch;
 @property (nonatomic,retain) NSDate *iRemindDate;
 @property (nonatomic,retain) NSString *iNote;
 

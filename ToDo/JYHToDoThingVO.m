@@ -27,9 +27,7 @@ static NSString *REMINDDATE = @"REMINDDATE";
 - (void)dealloc
 {
   [iTodoStr release];
-  [isFinished release];
   [iTimeStamp release];
-  [iSwitch release];
   [iNote release];
   [iRemindDate release];
   [super dealloc];
@@ -41,9 +39,9 @@ static NSString *REMINDDATE = @"REMINDDATE";
   if (self = [super init])
   {
     self.iTodoStr = [aDecoder decodeObjectForKey:TODOSTR];
-    self.isFinished = [aDecoder decodeObjectForKey:ISFINISHED];
+    self.isFinished = [aDecoder decodeBoolForKey:ISFINISHED];
     self.iTimeStamp = [aDecoder decodeObjectForKey:ITIMESTAMP];
-    self.iSwitch = [aDecoder decodeObjectForKey:SWITCH];
+    self.iSwitch = [aDecoder decodeBoolForKey:SWITCH];
     self.iNote = [aDecoder decodeObjectForKey:NOTE];
     self.iRemindDate = [aDecoder decodeObjectForKey:REMINDDATE];
   }
@@ -52,11 +50,11 @@ static NSString *REMINDDATE = @"REMINDDATE";
   //反序列化方法
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-  [aCoder encodeObject:isFinished forKey:ISFINISHED];
+  [aCoder encodeBool:isFinished forKey:ISFINISHED];
   [aCoder encodeObject:iTodoStr forKey:TODOSTR];
   [aCoder encodeObject:iTimeStamp forKey:ITIMESTAMP];
   [aCoder encodeObject:iRemindDate forKey:REMINDDATE];
-  [aCoder encodeObject:iSwitch forKey:SWITCH];
+  [aCoder encodeBool:iSwitch forKey:SWITCH];
   [aCoder encodeObject:iNote forKey:NOTE];
 }
 
