@@ -14,20 +14,38 @@
 {
   UIDatePicker *iDatepicker;
   CGFloat cellHeight[4];
+  UISwitch *iSwitchButton;
 }
 @property (nonatomic,retain)UIDatePicker *iDatepicker;
+@property (nonatomic,retain)UISwitch *iSwitchButton;
+
 @end
 
 @implementation JYHToDoDetailController
 @synthesize iDetailVC;
 @synthesize iDate;
 @synthesize iDatepicker;
-
+@synthesize iSwitchButton;
 
 #pragma mark tableview delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  return 1;
+  if (section == 1)
+  {
+      //带过来的数据或者当前页面对switchbtn进行改变。switchbtn切换时不对值进行改变，点击done之后才修改
+    if (iDetailVC.iDetailVO.iSwitch | iSwitchButton.on)
+    {
+      return 2;
+    }
+    else
+    {
+      return 1;
+    }
+  }
+  else
+  {
+    return 1;
+  }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -40,7 +58,6 @@
   }
   if (indexPath.section == 0)
   {
-    cell = [[[ACEExpandableTextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellidentifier]autorelease];
     cell = [tableView expandableTextCellWithId:@"cellId"];
     
     ((ACEExpandableTextCell *)cell).textView.text = iDetailVC.iDetailVO.iTodoStr;
@@ -49,54 +66,47 @@
     //switch
   else if(indexPath.section == 1)
   {
-    cell = [[[NSBundle mainBundle] loadNibNamed:@"JYHSwitchTableViewCell" owner:nil options:nil] lastObject];
+    if (indexPath.row == 0)
+    {
+      cell = [[[NSBundle mainBundle] loadNibNamed:@"JYHSwitchTableViewCell" owner:nil options:nil] lastObject];
+      
+      iSwitchButton = ((JYHSwitchTableViewCell *)cell).iSwitch;
+      UILabel *label = ((JYHSwitchTableViewCell *)cell).iNameLabel;
+      label.text = @"设置提醒";
+      if (iDetailVC.iDetailVO.iSwitch)
+      {
+        [iSwitchButton setOn:YES];
+      }
+      else
+      {
+        [iSwitchButton setOn:NO];
+      }
+      [iSwitchButton addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+    }
+    else
+    {
+        //datepicker
+      {
+        NSString *dateStr = nil;
+        dateStr = [self systemDate:iDetailVC.iDetailVO.iRemindDate];
+        cell.textLabel.text = dateStr;
+        if (iDetailVC.iDetailVO.iSwitch)
+        {
+          cell.textLabel.textColor = [UIColor blackColor];
+          cell.userInteractionEnabled = YES;
+        }
+        else
+        {
+          cell.textLabel.textColor = [UIColor grayColor];
+          cell.userInteractionEnabled = NO;
+        }
+      }
+    }
+  }
 
-    UISwitch *switchButton = ((JYHSwitchTableViewCell *)cell).iSwitch;
-    UILabel *label = ((JYHSwitchTableViewCell *)cell).iNameLabel;
-    label.text = @"设置提醒";
-    if (iDetailVC.iDetailVO.iSwitch != nil && [iDetailVC.iDetailVO.iSwitch isEqualToString:@"1"])
-    {
-      [switchButton setOn:YES];
-    }
-    else
-    {
-      [switchButton setOn:NO];
-    }
-    [switchButton addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
-    [cell addSubview:switchButton];
-  }
-    //datepicker
-  else if(indexPath.section == 2)
-  {
-    NSString *dateStr = nil;
-      //获得系统时间
-//    if (iDetailVC.iDetailVO.iRemindDate != nil  )
-//    {
-//      dateStr = iDetailVC.iDetailVO.iRemindDate;
-//    }
-//    else
-//    {
-//      dateStr = [self systemDate];
-//    }
-    dateStr = [self systemDate:iDetailVC.iDetailVO.iRemindDate];
-    cell.textLabel.text = dateStr;
-    if (iDetailVC.iDetailVO.iSwitch != nil && [iDetailVC.iDetailVO.iSwitch isEqualToString:@"1"])
-    {
-      cell.textLabel.textColor = [UIColor blackColor];
-      cell.userInteractionEnabled = YES;
-    }
-    else
-    {
-      cell.textLabel.textColor = [UIColor grayColor];
-      cell.userInteractionEnabled = NO;
-    }
-  }
-    //label
   else
   {
-    cell = [[[ACEExpandableTextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellidentifier]autorelease];
     cell = [tableView expandableTextCellWithId:@"cellId"];
-
     ((ACEExpandableTextCell *)cell).textView.text = iDetailVC.iDetailVO.iNote;
     ((ACEExpandableTextCell *)cell).textView.placeholder = @"text";
   }
@@ -106,7 +116,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //弹出datepicker
-  if (indexPath.section == 2)
+  if (indexPath.section == 1 && indexPath.row == 1)
   {
     iDatepicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 300, 320, 216)];
     iDatepicker.datePickerMode = UIDatePickerModeDateAndTime;
@@ -122,7 +132,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-  return 4;
+  return 3;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -167,11 +177,11 @@
   UISwitch *tempSwitch = (UISwitch *)sender;
   if (tempSwitch.on)
   {
-    iDetailVC.iDetailVO.iSwitch = @"1";
+    iDetailVC.iDetailVO.iSwitch = TRUE;
   }
   else
   {
-    iDetailVC.iDetailVO.iSwitch = @"0";
+    iDetailVC.iDetailVO.iSwitch = FALSE;
   }
   [iDetailVC.iTableview reloadData];
 }

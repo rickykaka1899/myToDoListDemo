@@ -20,4 +20,5 @@
 }
 @property (nonatomic,assign) JYHToDoDetailViewController *iDetailVC;
 @property (nonatomic,retain) NSDate *iDate;
+
 @end

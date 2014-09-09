@@ -144,7 +144,7 @@
 {
     ACEExpandableTextCell *cell = [self dequeueReusableCellWithIdentifier:cellId];
     if (cell == nil) {
-        cell = [[ACEExpandableTextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId];
+        cell = [[[ACEExpandableTextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId]autorelease];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.expandableTableView = self;
     }

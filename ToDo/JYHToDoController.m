@@ -56,7 +56,7 @@
       {
         for ( JYHToDoThingVO *strvo in iCacheList)
         {
-          if ([strvo.isFinished isEqualToString:@"1"])
+          if (strvo.isFinished)
           {
             [iToDoList addObject:strvo];
           }
@@ -67,7 +67,7 @@
       {
         for ( JYHToDoThingVO *strvo in iCacheList)
         {
-          if ([strvo.isFinished isEqualToString:@"0" ])
+          if (!strvo.isFinished)
           {
             [iToDoList addObject:strvo];
           }
@@ -102,7 +102,9 @@
     UITextView *iTextView = [[UITextView alloc] initWithFrame:CGRectMake(8, 0, 240, 24)];
 //    iTextView.frame = CGRectMake(16, 0, 240, 24);
     iTextView.text = ((JYHToDoThingVO *)[iToDoList objectAtIndex:indexPath.row]).iTodoStr;
-    return [self expandCellTextViewAttributes:iTextView].size.height;
+    CGFloat returnHeight = [self expandCellTextViewAttributes:iTextView].size.height;
+    [iTextView release];
+    return returnHeight;
   }
 }
 
@@ -147,9 +149,10 @@
   
   if (cell == nil)
   {
-    cell = [[[ACEExpandableTextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellidentifier]autorelease];
+//    cell = [[[ACEExpandableTextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellidentifier]autorelease];
+    cell = (ACEExpandableTextCell *)[tableView expandableTextCellWithId:@"cellId"];
+
   }
-  cell = (ACEExpandableTextCell *)[tableView expandableTextCellWithId:@"cellId"];
   if (indexPath.row == [iToDoList count])
   {
 //    UITextView *tempView = ((ACEExpandableTextCell *)cell).textView;
@@ -175,8 +178,8 @@
     [detailBtn release];
     if (!iToDoVC.isEditing)
     {
-      NSString *fini = ((JYHToDoThingVO *)[iToDoList objectAtIndex:indexPath.row]).isFinished;
-      if([fini isEqualToString:@"1"])
+      BOOL fini = ((JYHToDoThingVO *)[iToDoList objectAtIndex:indexPath.row]).isFinished;
+      if(fini)
       {
         cell.selected = YES;
       }
@@ -196,13 +199,13 @@
     //  UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     //  cell.selected = YES;
   JYHToDoThingVO *thingVO = [iToDoList objectAtIndex:indexPath.row];
-  if ([thingVO.isFinished isEqualToString:@"0"])
+  if (!thingVO.isFinished)
   {
-    thingVO.isFinished = @"1";
+    thingVO.isFinished = TRUE;
   }
   else
   {
-    thingVO.isFinished = @"0";
+    thingVO.isFinished = FALSE;
   }
   [iToDoList replaceObjectAtIndex:indexPath.row withObject:thingVO];
   [self changeStatusOfVO:thingVO withStatus:thingVO.isFinished];
@@ -218,7 +221,7 @@
 - (void)tableView:(UITableView *)tableView updatedText:(NSString *)text atIndexPath:(NSIndexPath *)indexPath
 {
   JYHToDoThingVO *todoVO = [[JYHToDoThingVO alloc] init];
-  todoVO.isFinished = @"0";
+  todoVO.isFinished = FALSE;
   todoVO.iTodoStr = text;
   todoVO.iTimeStamp = [self getterTimeStamp];
     //新增的
@@ -418,7 +421,7 @@
 }
 
 #pragma mark changestatus
-- (void)changeStatusOfVO:(JYHToDoThingVO*)thingVO withStatus:(NSString *)status
+- (void)changeStatusOfVO:(JYHToDoThingVO*)thingVO withStatus:(BOOL)status
 {
   for (JYHToDoThingVO *vo in iCacheList)
   {
@@ -460,9 +463,11 @@
      [iToDoVC.iTableView reloadData];
      for (NSInteger i = 0; i < [iCacheList count]; ++i)
      {
-         //单条删除没问题
+         //修改内容
        if (returnVO.iTimeStamp == ((JYHToDoThingVO *)iCacheList[i]).iTimeStamp) {
          [iCacheList replaceObjectAtIndex:i withObject:returnVO];
+           //注册本地通知（通知是设了时间才会有，设置时间是需要进入子页面才可以进行设置的）
+         [self initLocationNotification:returnVO];
          break;
        }
      }
@@ -471,6 +476,32 @@
   detailVC.iDetailVO = [iToDoList objectAtIndex:btn.tag];
   [self.iToDoVC presentViewController:detailVC animated:YES completion:nil];
   [detailVC release];
+}
+
+- (void)initLocationNotification:(JYHToDoThingVO *)vo
+{
+    //初始化
+  UILocalNotification *locationNotification = [[UILocalNotification alloc]  init];
+    //设置推送时间，这里使用相对时间，如果fireDate采用GTM标准时间，timeZone可以至nil
+  if (!vo.isFinished && vo.iSwitch)
+  {
+    locationNotification.fireDate = vo.iRemindDate;
+    locationNotification.timeZone = [NSTimeZone defaultTimeZone];
+      //设置重复周期
+    locationNotification.repeatInterval = NSWeekCalendarUnit;
+      //设置通知的音乐
+    locationNotification.soundName = UILocalNotificationDefaultSoundName;
+      //设置通知内容
+    locationNotification.alertBody = vo.iTodoStr;
+      //设置程序的Icon数量
+    locationNotification.applicationIconBadgeNumber = [[[UIApplication sharedApplication] scheduledLocalNotifications] count] + 1;
+    
+    NSDictionary *dict =[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1],@"nfkey",nil];
+    [locationNotification setUserInfo:dict];
+      //执行本地推送
+    [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
+  }
+  [locationNotification release];
 }
 
 @end
